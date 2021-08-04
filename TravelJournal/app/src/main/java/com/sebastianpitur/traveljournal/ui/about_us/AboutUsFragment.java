@@ -1,4 +1,4 @@
-package com.sebastianpitur.traveljournal.ui.slideshow;
+package com.sebastianpitur.traveljournal.ui.about_us;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,24 +12,23 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.sebastianpitur.traveljournal.R;
-import com.sebastianpitur.traveljournal.databinding.FragmentSlideshowBinding;
+import com.sebastianpitur.traveljournal.databinding.FragmentAboutUsBinding;
 
-public class SlideshowFragment extends Fragment {
+public class AboutUsFragment extends Fragment {
 
-    private SlideshowViewModel slideshowViewModel;
-    private FragmentSlideshowBinding binding;
+    private AboutUsViewModel galleryViewModel;
+    private FragmentAboutUsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        slideshowViewModel =
-                new ViewModelProvider(this).get(SlideshowViewModel.class);
+        galleryViewModel =
+                new ViewModelProvider(this).get(AboutUsViewModel.class);
 
-        binding = FragmentSlideshowBinding.inflate(inflater, container, false);
+        binding = FragmentAboutUsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textSlideshow;
-        slideshowViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        final TextView textView = binding.textAboutUs;
+        galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

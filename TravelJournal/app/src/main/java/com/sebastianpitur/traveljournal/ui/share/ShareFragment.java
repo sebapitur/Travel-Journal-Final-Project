@@ -1,4 +1,4 @@
-package com.sebastianpitur.traveljournal.ui.gallery;
+package com.sebastianpitur.traveljournal.ui.share;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,23 +12,22 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.sebastianpitur.traveljournal.databinding.FragmentGalleryBinding;
+import com.sebastianpitur.traveljournal.databinding.FragmentShareBinding;
 
-public class GalleryFragment extends Fragment {
-
-    private GalleryViewModel galleryViewModel;
-    private FragmentGalleryBinding binding;
+public class ShareFragment extends Fragment {
+    private ShareViewModel shareViewModel;
+    private FragmentShareBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        galleryViewModel =
-                new ViewModelProvider(this).get(GalleryViewModel.class);
+        shareViewModel =
+                new ViewModelProvider(this).get(ShareViewModel.class);
 
-        binding = FragmentGalleryBinding.inflate(inflater, container, false);
+        binding = FragmentShareBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textGallery;
-        galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        final TextView textView = binding.textShare;
+        shareViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

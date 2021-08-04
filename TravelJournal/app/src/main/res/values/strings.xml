@@ -15,4 +15,7 @@
     <string name="name_and_surname">Name and Surname</string>
     <string name="email_address">Email address</string>
     <string name="login">Login</string>
+    <string name="about_us">About Us</string>
+    <string name="contact">Contact</string>
+    <string name="share">Share</string>
 </resources>
