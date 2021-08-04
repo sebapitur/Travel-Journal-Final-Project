@@ -12,4 +12,7 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="name_and_surname">Name and Surname</string>
+    <string name="email_address">Email address</string>
+    <string name="login">Login</string>
 </resources>

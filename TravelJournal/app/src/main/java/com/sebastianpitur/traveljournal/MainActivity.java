@@ -3,6 +3,8 @@ package com.sebastianpitur.traveljournal;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -22,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         com.sebastianpitur.traveljournal.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
     }
 
     @Override
@@ -59,6 +61,15 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public void resolveLogin(View view) {
+        EditText nameSurnameEditText = this.findViewById(R.id.nameSurnameEditText);
+        EditText emailAddressEditText = this.findViewById(R.id.emailAddressEditText);
+        TextView nameAndSurname = this.findViewById(R.id.nameAndSurname);
+        TextView emailAddressOfUser = this.findViewById(R.id.emailAddressOfUser);
+        nameAndSurname.setText(nameSurnameEditText.getText());
+        emailAddressOfUser.setText(emailAddressEditText.getText());
     }
 }
 

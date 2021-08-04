@@ -22,4 +22,38 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
+
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:layout_marginTop="100dp"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content">-->
+
+<!--        <EditText-->
+<!--            android:id="@+id/nameSurnameEditText"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="@string/name_and_surname"-->
+<!--            tools:layout_editor_absoluteX="-16dp"-->
+<!--            tools:layout_editor_absoluteY="289dp"-->
+<!--            tools:ignore="MissingConstraints" />-->
+
+<!--        <EditText-->
+<!--            android:id="@+id/emailAddressEditText"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="@string/email_address"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/nameSurnameEditText" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/login_button"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:onClick="resolveLogin"-->
+<!--            android:text="@string/login"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/emailAddressEditText" />-->
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
 </androidx.drawerlayout.widget.DrawerLayout>
