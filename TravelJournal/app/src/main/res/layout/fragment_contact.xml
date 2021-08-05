@@ -10,13 +10,37 @@
         android:id="@+id/text_contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
+        android:textSize="@dimen/large_text"
+        android:autoLink="web|email"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.096" />
+
+    <TextView
+        android:id="@+id/text_contact2"
+        android:layout_width="match_parent"
+        android:textSize="@dimen/large_text"
+        android:autoLink="phone"
+        android:layout_height="wrap_content"
+        android:text="@string/phone_number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_contact" />
+
+    <TextView
+        android:id="@+id/text_contact3"
+        android:layout_width="match_parent"
+        android:autoLink="map"
+        android:textSize="@dimen/large_text"
+        android:layout_height="wrap_content"
+        android:text="@string/address_john_kent_street_number_45"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_contact2" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/nav_share"
-        android:name="com.sebastianpitur.traveljournal.ui.contact.ContactFragment"
+        android:name="com.sebastianpitur.traveljournal.ui.share.ShareFragment"
         android:label="@string/share"
         tools:layout="@layout/fragment_share" />
 

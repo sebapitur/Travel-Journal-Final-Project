@@ -18,4 +18,6 @@
     <string name="about_us">About Us</string>
     <string name="contact">Contact</string>
     <string name="share">Share</string>
+    <string name="address_john_kent_street_number_45">Address: John Kent Street number 45</string>
+    <string name="phone_number">Phone number: +23674893923</string>
 </resources>
