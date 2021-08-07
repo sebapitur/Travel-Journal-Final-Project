@@ -1,23 +1,34 @@
 package com.sebastianpitur.traveljournal;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.inputmethodservice.Keyboard;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Trips extends AppCompatActivity {
-    List<Trip> trips;
+    ArrayList<Trip> trips;
     TripsAdapter adapter;
     private ImageAdapter currentImageAdapter;
     private static final int PICK_IMAGE = 100;
@@ -37,9 +48,21 @@ public class Trips extends AppCompatActivity {
     }
 
     public Trips() {
-        trips = new LinkedList<>();
+        trips = new ArrayList<>();
     }
 
+
+    @Override
+    public void onSaveInstanceState(@NotNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putParcelableArrayList("OldTrips", (ArrayList<? extends Parcelable>) trips);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        trips.addAll(savedInstanceState.getParcelableArrayList("OldTrips"));
+    }
 
     @Override
     protected void onResume() {
@@ -63,7 +86,7 @@ public class Trips extends AppCompatActivity {
         RecyclerView rvTrips = findViewById(R.id.tripsList);
 
         // Initialize contacts
-        trips = new LinkedList<>();
+        trips = new ArrayList<>();
         // Create adapter passing in the sample user data
         adapter = new TripsAdapter();
         // Attach the adapter to the recyclerview to populate items
@@ -87,6 +110,22 @@ public class Trips extends AppCompatActivity {
     }
 
     public void changeName(View view) {
+        View parentView = (View) view.getParent().getParent();
+        TextView textView = parentView.findViewById(R.id.tripName);
+        EditText name = parentView.findViewById(R.id.buttons).findViewById(R.id.changeNameEdit);
+        textView.setText(name.getText());
+        hideSoftKeyboard(this);
+    }
 
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        if(inputMethodManager.isAcceptingText()){
+            inputMethodManager.hideSoftInputFromWindow(
+                    activity.getCurrentFocus().getWindowToken(),
+                    0
+            );
+        }
     }
 }

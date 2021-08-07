@@ -5,13 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.transition.Hold;
 
 import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
@@ -58,14 +57,15 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         public View buttons;
         public Button addButton;
         public Button changeNamebutton;
-
+        public EditText changeNameEdit;
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             tripElement = itemView.findViewById(R.id.tripElement);
             tripName = itemView.findViewById(R.id.tripName);
             buttons = itemView.findViewById(R.id.buttons);
             addButton = buttons.findViewById(R.id.add_trip_button);
-            changeNamebutton = buttons.findViewById(R.id.changeName);
+            changeNamebutton = buttons.findViewById(R.id.changeNameButton);
+            changeNameEdit = buttons.findViewById(R.id.changeNameEdit);
         }
     }
 

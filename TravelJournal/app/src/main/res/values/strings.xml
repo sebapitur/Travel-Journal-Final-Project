@@ -31,4 +31,5 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="add_empty_trip">Add empty trips</string>
     <string name="plus_sign">+</string>
+    <string name="new_name_for_the_trip">new name for the trip</string>
 </resources>
