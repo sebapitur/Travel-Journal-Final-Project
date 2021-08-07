@@ -1,6 +1,7 @@
 package com.sebastianpitur.traveljournal;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import java.util.List;
 public class ImageAdapter extends RecyclerView.Adapter {
 
     private final Context cxt;
+    private List<Image> mImages;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
@@ -28,8 +30,6 @@ public class ImageAdapter extends RecyclerView.Adapter {
         }
     }
 
-
-    private List<Image> mImages;
 
     @NonNull
     @NotNull
@@ -66,4 +66,10 @@ public class ImageAdapter extends RecyclerView.Adapter {
         this.cxt = mContext;
         this.mImages = list;
     }
+
+    public void addImage(Uri image) {
+        mImages.add(new Image(image));
+        this.notifyItemChanged(mImages.size() - 1);
+    }
+
 }

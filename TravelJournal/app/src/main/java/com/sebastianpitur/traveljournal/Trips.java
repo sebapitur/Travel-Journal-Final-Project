@@ -1,7 +1,12 @@
 package com.sebastianpitur.traveljournal;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,9 +19,39 @@ import java.util.List;
 public class Trips extends AppCompatActivity {
     List<Trip> trips;
     TripsAdapter adapter;
+    private ImageAdapter currentImageAdapter;
+    private static final int PICK_IMAGE = 100;
+
+    private void openGallery() {
+        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery, PICK_IMAGE);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        Uri imageUri;
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE){
+            imageUri = data.getData();
+            currentImageAdapter.addImage(imageUri);
+        }
+    }
 
     public Trips() {
         trips = new LinkedList<>();
+    }
+
+
+    @Override
+    protected void onResume() {
+
+        Log.e("finished adding image","On resume method was called");
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.e("adding image","On pause method was called");
+        super.onPause();
     }
 
     @Override
@@ -42,5 +77,16 @@ public class Trips extends AppCompatActivity {
         trips.add(new Trip());
         trips.get(trips.size() - 1).setName("Trip " + (trips.size() - 1));
         adapter.addTrip();
+    }
+
+    public void addImageToTrip(View view) {
+        View parentView = (View) view.getParent().getParent();
+        RecyclerView recyclerView = parentView.findViewById(R.id.tripElement);
+        currentImageAdapter = (ImageAdapter) recyclerView.getAdapter();
+        openGallery();
+    }
+
+    public void changeName(View view) {
+
     }
 }

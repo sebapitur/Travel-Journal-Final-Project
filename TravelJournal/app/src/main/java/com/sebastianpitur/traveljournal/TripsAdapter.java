@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,10 +41,10 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         TextView tripName = holder.tripName;
         trip.setName(name);
         tripName.setText(name);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-        holder.tripElement.setLayoutManager(layoutManager);
-        holder.tripElement.setHasFixedSize(false);
-        holder.tripElement.setAdapter(new ImageAdapter(new LinkedList<>(), holder.tripElement.getContext()));
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setAdapter(new ImageAdapter(new LinkedList<>(), holder.tripElement.getContext()));
     }
 
     @Override
@@ -54,11 +55,17 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public RecyclerView tripElement;
         public TextView tripName;
+        public View buttons;
+        public Button addButton;
+        public Button changeNamebutton;
 
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             tripElement = itemView.findViewById(R.id.tripElement);
             tripName = itemView.findViewById(R.id.tripName);
+            buttons = itemView.findViewById(R.id.buttons);
+            addButton = buttons.findViewById(R.id.add_trip_button);
+            changeNamebutton = buttons.findViewById(R.id.changeName);
         }
     }
 
