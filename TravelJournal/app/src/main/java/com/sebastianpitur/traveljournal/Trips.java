@@ -20,6 +20,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Dao;
+import androidx.room.Room;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -78,28 +80,44 @@ public class Trips extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trips);
 
         // Lookup the recyclerview in activity layout
         RecyclerView rvTrips = findViewById(R.id.tripsList);
+        TripDao tripDao = TripDataBase.getDatabase(getApplicationContext()).tripDao();
+        // Initialize trips
 
-        // Initialize contacts
-        trips = new ArrayList<>();
+        if (tripDao != null)
+             TripDataBase.databaseWriteExecutor.execute(() -> {
+                trips = (ArrayList<Trip>) tripDao.getAll();
+            });
+        if (trips == null)
+            trips = new ArrayList<>();
         // Create adapter passing in the sample user data
         adapter = new TripsAdapter();
+        if(trips.size() != 0)
+            adapter.updateDataBase(trips);
         // Attach the adapter to the recyclerview to populate items
         rvTrips.setAdapter(adapter);
         // Set layout manager to position the items
         rvTrips.setLayoutManager(new LinearLayoutManager(this));
         // That's all!
     }
-
     public void addTrip(View view) {
         trips.add(new Trip());
         trips.get(trips.size() - 1).setName("Trip " + (trips.size() - 1));
         adapter.addTrip();
+        TripDataBase.databaseWriteExecutor.execute(() -> {
+                TripDataBase.getDatabase(getApplicationContext()).tripDao().insert(trips.get(trips.size() - 1));
+//                Log.e("insert", "add trip to database");
+       });
     }
 
     public void addImageToTrip(View view) {
@@ -127,5 +145,13 @@ public class Trips extends AppCompatActivity {
                     0
             );
         }
+    }
+
+    public void clearDataBase(View view) {
+        trips.clear();
+        adapter.updateDataBase(trips);
+        TripDataBase.databaseWriteExecutor.execute(() -> {
+            TripDataBase.getDatabase(getApplicationContext()).clearAllTables();
+        });
     }
 }

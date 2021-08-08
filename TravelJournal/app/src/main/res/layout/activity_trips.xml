@@ -21,4 +21,14 @@
        android:layout_height="wrap_content"
        tools:ignore="MissingConstraints" />
 
+    <Button
+        android:id="@+id/clear_data_base"
+        android:layout_width="wrap_content"
+        android:onClick="clearDataBase"
+        android:layout_height="wrap_content"
+        android:text="clear history"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/add_trip_button"
+        tools:ignore="MissingConstraints" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

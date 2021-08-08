@@ -20,6 +20,10 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
     Context context;
     private List<Trip> mTrips;
 
+    public void updateDataBase(List<Trip> trips){
+       mTrips = trips;
+       this.notifyDataSetChanged();
+    }
     public ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
