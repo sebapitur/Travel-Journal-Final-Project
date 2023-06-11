@@ -20,34 +20,39 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
     Context context;
     private List<Trip> mTrips;
 
-    public void updateDataBase(List<Trip> trips){
+    public TripsAdapter() {
+        mTrips = new LinkedList<>();
+    }
+
+    public void addTrips(List<Trip> trips){
        mTrips = trips;
        this.notifyDataSetChanged();
     }
-    public ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
 
-        View tripView = inflater.inflate(R.layout.trip_element, parent, false);
+    public List<Trip> getTrips(){
+        return mTrips;
+    }
 
-        ViewHolder viewHolder = new ViewHolder(tripView);
-        return viewHolder;
+    public void setTrips(List<Trip> trips){
+        mTrips = trips;
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.trip_element, parent, false);
+
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TripsAdapter.ViewHolder holder, int position) {
         Trip trip = mTrips.get(position);
-
-        // Set item views based on your views and data model
-        RecyclerView recyclerView = holder.tripElement;
-        String name = "Trip " + position;
-        TextView tripName = holder.tripName;
-        trip.setName(name);
-        tripName.setText(name);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView recyclerView = holder.tripElement;
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(false);
-        recyclerView.setAdapter(new ImageAdapter(new LinkedList<>(), holder.tripElement.getContext()));
+        recyclerView.setAdapter(new TripAdapter(trip));
     }
 
     @Override
@@ -55,14 +60,15 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         return mTrips.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public RecyclerView tripElement;
         public TextView tripName;
         public View buttons;
         public Button addButton;
         public Button changeNamebutton;
         public EditText changeNameEdit;
-        public ViewHolder(@NonNull @NotNull View itemView) {
+
+        public ViewHolder(@NotNull View itemView) {
             super(itemView);
             tripElement = itemView.findViewById(R.id.tripElement);
             tripName = itemView.findViewById(R.id.tripName);
@@ -73,12 +79,10 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         }
     }
 
-    public void addTrip() {
-        mTrips.add(new Trip());
+
+    public void addTrip(Trip trip) {
+        mTrips.add(trip);
         this.notifyItemInserted(mTrips.size() - 1);
     }
 
-    public TripsAdapter() {
-        mTrips = new LinkedList<>();
-    }
 }

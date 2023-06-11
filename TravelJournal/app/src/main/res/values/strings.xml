@@ -33,4 +33,5 @@
     <string name="plus_sign">+</string>
     <string name="new_name_for_the_trip">new name for the trip</string>
     <string name="favorite">mark as favorite</string>
+    <string name="password">Password</string>
 </resources>

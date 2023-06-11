@@ -16,13 +16,11 @@ import com.sebastianpitur.traveljournal.databinding.FragmentAboutUsBinding;
 
 public class AboutUsFragment extends Fragment {
 
-    private AboutUsViewModel galleryViewModel;
     private FragmentAboutUsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        galleryViewModel =
-                new ViewModelProvider(this).get(AboutUsViewModel.class);
+        AboutUsViewModel galleryViewModel = new ViewModelProvider(this).get(AboutUsViewModel.class);
 
         binding = FragmentAboutUsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();

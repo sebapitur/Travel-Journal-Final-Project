@@ -1,39 +1,38 @@
 package com.sebastianpitur.traveljournal;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.inputmethodservice.Keyboard;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Dao;
-import androidx.room.Room;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 public class Trips extends AppCompatActivity {
-    ArrayList<Trip> trips;
     TripsAdapter adapter;
-    private ImageAdapter currentImageAdapter;
     private static final int PICK_IMAGE = 100;
+    public String accountName;
+    private TripAdapter currentTripAdapter;
 
     private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
@@ -45,38 +44,31 @@ public class Trips extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == PICK_IMAGE){
             imageUri = data.getData();
-            currentImageAdapter.addImage(imageUri);
+            currentTripAdapter.getTrip().images.add(new Image(imageUri));
+            TripDataBase.databaseWriteExecutor.execute(() -> {
+                TripDataBase.getDatabase(getApplicationContext()).tripDao().update(currentTripAdapter.getTrip());
+            });
+
+            currentTripAdapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();
         }
     }
 
-    public Trips() {
-        trips = new ArrayList<>();
-    }
-
-
-    @Override
-    public void onSaveInstanceState(@NotNull Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putParcelableArrayList("OldTrips", (ArrayList<? extends Parcelable>) trips);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        trips.addAll(savedInstanceState.getParcelableArrayList("OldTrips"));
-    }
+    public Trips() {    }
 
     @Override
     protected void onResume() {
-
-        Log.e("finished adding image","On resume method was called");
         super.onResume();
+        Log.e("", "resume");
+        populateView();
+
     }
 
     @Override
     protected void onPause() {
-        Log.e("adding image","On pause method was called");
         super.onPause();
+        Log.e("", "pause");
+        populateView();
     }
 
     @Override
@@ -88,42 +80,60 @@ public class Trips extends AppCompatActivity {
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trips);
+        Intent intent = getIntent();
+        accountName = intent.getStringExtra("account");
+        adapter = new TripsAdapter();
+        // Check if the permission is already granted
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, request it
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    2);
+        } else {
+            populateView();
+        }
+    }
 
-        // Lookup the recyclerview in activity layout
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 2) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                populateView();
+            } else {
+                // Permission denied, handle the situation accordingly
+            }
+        }
+    }
+
+
+    private void populateView() {
         RecyclerView rvTrips = findViewById(R.id.tripsList);
         TripDao tripDao = TripDataBase.getDatabase(getApplicationContext()).tripDao();
         // Initialize trips
 
         if (tripDao != null)
-             TripDataBase.databaseWriteExecutor.execute(() -> {
-                trips = (ArrayList<Trip>) tripDao.getAll();
+            TripDataBase.databaseWriteExecutor.execute(() -> {
+                adapter.setTrips((ArrayList<Trip>) tripDao.getAll());
             });
-        if (trips == null)
-            trips = new ArrayList<>();
-        // Create adapter passing in the sample user data
-        adapter = new TripsAdapter();
-        if(trips.size() != 0)
-            adapter.updateDataBase(trips);
-        // Attach the adapter to the recyclerview to populate items
+
         rvTrips.setAdapter(adapter);
         // Set layout manager to position the items
         rvTrips.setLayoutManager(new LinearLayoutManager(this));
-        // That's all!
     }
+
     public void addTrip(View view) {
-        trips.add(new Trip());
-        trips.get(trips.size() - 1).setName("Trip " + (trips.size() - 1));
-        adapter.addTrip();
+        adapter.addTrip(new Trip(accountName, "Trip " + (adapter.getTrips().size() - 1)));
         TripDataBase.databaseWriteExecutor.execute(() -> {
-                TripDataBase.getDatabase(getApplicationContext()).tripDao().insert(trips.get(trips.size() - 1));
-//                Log.e("insert", "add trip to database");
+                TripDataBase.getDatabase(getApplicationContext()).tripDao().insert(adapter.getTrips().get(adapter.getTrips().size() - 1));
        });
     }
 
     public void addImageToTrip(View view) {
         View parentView = (View) view.getParent().getParent();
         RecyclerView recyclerView = parentView.findViewById(R.id.tripElement);
-        currentImageAdapter = (ImageAdapter) recyclerView.getAdapter();
+        currentTripAdapter = (TripAdapter) recyclerView.getAdapter();
         openGallery();
     }
 
@@ -148,8 +158,8 @@ public class Trips extends AppCompatActivity {
     }
 
     public void clearDataBase(View view) {
-        trips.clear();
-        adapter.updateDataBase(trips);
+        adapter.getTrips().clear();
+        adapter.addTrips(adapter.getTrips());
         TripDataBase.databaseWriteExecutor.execute(() -> {
             TripDataBase.getDatabase(getApplicationContext()).clearAllTables();
         });
