@@ -1,6 +1,7 @@
 package com.sebastianpitur.traveljournal;
 
 import android.net.Uri;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -26,6 +27,11 @@ public class Trip implements Parcelable {
     @ColumnInfo(name = "trip_name")
     String name;
 
+    @ColumnInfo(name = "rating")
+    float rating;
+
+    @ColumnInfo(name = "favorite")
+    Boolean favorite;
 
     @ColumnInfo(name = "user")
     String user;
@@ -37,12 +43,18 @@ public class Trip implements Parcelable {
         images = new LinkedList<>();
         this.user = user;
         this.name = tripName;
+        this.favorite = false;
+        this.rating = 0.0F;
     }
 
     public Trip(Parcel in) {
         images = ImageListConverter.fromString(in.readString());
         name = in.readString();
         user = in.readString();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            favorite = in.readBoolean();
+        }
+        rating = in.readFloat();
     }
 
     public static final Creator<Trip> CREATOR = new Creator<Trip>() {
@@ -71,5 +83,9 @@ public class Trip implements Parcelable {
         dest.writeString(ImageListConverter.toString(images));
         dest.writeString(name);
         dest.writeString(user);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            dest.writeBoolean(favorite);
+        }
+        dest.writeFloat(rating);
     }
 }

@@ -1,11 +1,14 @@
 package com.sebastianpitur.traveljournal;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -53,6 +56,12 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(false);
         recyclerView.setAdapter(new TripAdapter(trip));
+        Log.i("get", trip.name);
+        Log.i("get", trip.favorite.toString());
+        Log.i("get", Float.toString(trip.rating));
+        holder.tripName.setText(trip.name);
+        holder.favorite.setChecked(trip.favorite);
+        holder.bar.setRating(trip.rating);
     }
 
     @Override
@@ -67,6 +76,8 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         public Button addButton;
         public Button changeNamebutton;
         public EditText changeNameEdit;
+        public RatingBar bar;
+        public CheckBox favorite;
 
         public ViewHolder(@NotNull View itemView) {
             super(itemView);
@@ -76,7 +87,10 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
             addButton = buttons.findViewById(R.id.add_trip_button);
             changeNamebutton = buttons.findViewById(R.id.changeNameButton);
             changeNameEdit = buttons.findViewById(R.id.changeNameEdit);
+            bar = itemView.findViewById(R.id.ratingBar);
+            favorite = itemView.findViewById(R.id.favoriteCheck);
         }
+
     }
 
 

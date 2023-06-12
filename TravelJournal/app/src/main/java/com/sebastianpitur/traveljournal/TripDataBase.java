@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 
 
 @TypeConverters(ImageListConverter.class)
-@Database(entities = {Trip.class}, version = 2)
+@Database(entities = {Trip.class}, version = 3)
 public abstract class TripDataBase extends RoomDatabase {
     private static volatile TripDataBase INSTANCE;
 

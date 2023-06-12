@@ -13,7 +13,9 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,7 +50,6 @@ public class Trips extends AppCompatActivity {
             TripDataBase.databaseWriteExecutor.execute(() -> {
                 TripDataBase.getDatabase(getApplicationContext()).tripDao().update(currentTripAdapter.getTrip());
             });
-
             currentTripAdapter.notifyDataSetChanged();
             adapter.notifyDataSetChanged();
         }
@@ -137,13 +138,67 @@ public class Trips extends AppCompatActivity {
         openGallery();
     }
 
-    public void changeName(View view) {
+    public void saveAll(View view) {
         View parentView = (View) view.getParent().getParent();
         TextView textView = parentView.findViewById(R.id.tripName);
+        RatingBar ratingBar = parentView.findViewById(R.id.ratingBar);
+        CheckBox checkBox = parentView.findViewById(R.id.favoriteCheck);
         EditText name = parentView.findViewById(R.id.buttons).findViewById(R.id.changeNameEdit);
         textView.setText(name.getText());
         hideSoftKeyboard(this);
+
+        RecyclerView recyclerView = parentView.findViewById(R.id.tripElement);
+        currentTripAdapter = (TripAdapter) recyclerView.getAdapter();
+
+        Log.i("set", name.getText().toString());
+
+        if (name.getText().toString().length() > 0)
+            currentTripAdapter.getTrip().name = name.getText().toString();
+
+        currentTripAdapter.getTrip().rating = ratingBar.getRating();
+        currentTripAdapter.getTrip().favorite = checkBox.isChecked();
+
+        TripDataBase.databaseWriteExecutor.execute(() -> {
+            TripDataBase.getDatabase(getApplicationContext()).tripDao().update(currentTripAdapter.getTrip());
+        });
+        currentTripAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
+
+
+//    public void addRating(float rating) {
+//        public void addRating(View view) {
+//        View parentView = (View) view.getParent().getParent();
+//        RatingBar ratingBar = parentView.findViewById(R.id.ratingBar);
+//        RecyclerView recyclerView = parentView.findViewById(R.id.tripElement);
+//        currentTripAdapter = (TripAdapter) recyclerView.getAdapter();
+//        Log.i("set", Float.toString(ratingBar.getRating()));
+//        currentTripAdapter.getTrip().rating = ratingBar.getRating();
+//        TripDataBase.databaseWriteExecutor.execute(() -> {
+//            TripDataBase.getDatabase(getApplicationContext()).tripDao().update(currentTripAdapter.getTrip());
+//        });
+//        currentTripAdapter.notifyDataSetChanged();
+//        adapter.notifyDataSetChanged();
+//    }
+
+//    public void markFavorite(boolean checked) {
+//    public void markFavorite(View view) {
+//    public void markFavorite(CheckBox checkBox) {
+////        View parentView = (View) view.getParent().getParent();
+//        View parentView = (View) checkBox.getParent();
+////        CheckBox checkBox = parentView.findViewById(R.id.favoriteCheck);
+//        RecyclerView recyclerView = parentView.findViewById(R.id.tripElement);
+//        Log.i("set", Boolean.toString(checkBox.isChecked()));
+////        Log.i("set", Boolean.toString(checked));
+//        currentTripAdapter = (TripAdapter) recyclerView.getAdapter();
+//        currentTripAdapter.getTrip().favorite = checkBox.isChecked();
+////        currentTripAdapter.getTrip().favorite = checked;
+//        TripDataBase.databaseWriteExecutor.execute(() -> {
+//            TripDataBase.getDatabase(getApplicationContext()).tripDao().update(currentTripAdapter.getTrip());
+//        });
+//        currentTripAdapter.notifyDataSetChanged();
+//        adapter.notifyDataSetChanged();
+//    }
 
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =
